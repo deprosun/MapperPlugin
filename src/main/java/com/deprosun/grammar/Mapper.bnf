@@ -1,0 +1,98 @@
+{
+    // Name and the location of the parser which will be generated.
+    parserClass="com.deprosun.parser.MapperParser"
+
+    // All nodes will extend this class. This wraps AST node to a PSI node.
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    // Prefix for all generated classes.
+    psiClassPrefix=""
+    // Suffix for implementation classes.
+    psiImplClassSuffix="Impl"
+
+    // Location to be used when generating PSI classes.
+    psiPackage="com.deprosun.psi"
+    // Location to be used when generating PSI implementation classes.
+    psiImplPackage="com.deprosun.psi.impl"
+
+    // Element type holder class name. This class will be used extensively throughout the tutorial.
+    elementTypeHolderClass="com.deprosun.psi.SimpleTypes"
+
+    // Class which will be used to create internal nodes.
+    elementTypeClass="com.deprosun.psi.MapperElementType"
+    // Class which will be used to create leaf nodes.
+    tokenTypeClass="com.deprosun.psi.MapperTokenType"
+
+    tokens = [
+        ID = 'regexp:([a-zA-Z_][a-zA-Z0-9_]*)| FROM'
+        OPEN_PARENTH = 'regexp:\('
+        CLOSE_PARENTH = 'regexp:\)'
+        OPEN_SQUARE = 'regexp:\['
+        CLOSE_SQUARE = 'regexp:\]'
+        PK = 'regexp:[pP][kK]'
+        FK = 'regexp:[fF][kK]'
+        COMMA = 'regexp:,'
+        DOT = 'regexp:\.'
+        NOT = 'regexp:[nN][oO][tT]'
+        NULL = 'regexp:[nN][uU][lL]'
+        NUM = 'regexp:[\d]+'
+        SOURCE_WORD = 'regexp:SOURCE'
+        MAPPING_WORD = 'regexp:MAPPING'
+        FROM_WORD = 'regexp:FROM'
+        REFERENCE_WORD = 'regexp:Reference'
+        CONCAT_BY_WORD = 'regexp:ConcatBy'
+        REFERENCE_TYPE_WORD = 'regexp:ReferenceType'
+        REFERENCE_WORD = 'regexp:Reference'
+        COMMENT = 'regexp:[/][/].*$'
+        WHITE_SPACE = 'regexp:\s+'
+        EQUAL = 'regexp:='
+    ]
+}
+
+Mappers ::= Mapper
+
+Mapper ::= SOURCE_WORD MapperTableName (FROM_WORD MapperFromField)? '(' MapperMappings Mapper* ')'
+
+MapperMappings ::= MAPPING_WORD '(' MapperMapping (COMMA MapperMapping)* ')'
+
+MapperMapping ::= MapperMappingPath EQUAL MapperColumnName MapperDataType MapperPrecision? MapperNullNotnull MapperAttribute?
+
+MapperMappingPath ::= MapperFirstFieldName ('.' MapperMiddleFieldName)*
+
+MapperPrecision ::= '(' MapperPrecisionNumWord (','? MapperPrecisionNumWord)* ')'
+
+MapperPrecisionNumWord ::= NUM | ID
+
+MapperAttribute ::= MapperReference | MapperPk_Fk | MapperConcatBy | MapperReferenceType
+
+MapperReference ::= REFERENCE_WORD '[' MapperFhirResource ']'
+
+MapperPk_Fk ::= PK | FK
+
+MapperConcatBy ::= CONCAT_BY_WORD '[' MapperSeparator ']'
+
+MapperReferenceType ::= REFERENCE_TYPE_WORD
+
+MapperSeparator ::= ',' | '.' | ''
+
+MapperDataType ::= ID
+
+MapperTableName ::= ID
+
+MapperFhirResource ::= ID
+
+MapperFromField ::= MapperFirstFieldName ( '.' MapperMiddleFieldName)*
+
+MapperFirstFieldName ::= ID
+
+MapperColumnName ::= ID
+
+MapperMiddleFieldName ::= ID | MapperListIndex
+
+MapperListIndex ::= '[' NUM ']'
+
+MapperNullNotnull ::= MapperNull | MapperNotNull
+
+MapperNull ::= NULL
+
+MapperNotNull ::= NOT NULL

@@ -1,0 +1,21 @@
+<idea-plugin>
+    <id>com.deprosun.MapperPlugin</id>
+    <name>Mapper Syntax Checker</name>
+    <vendor email="karang90@gmail.com">Deprosun</vendor>
+
+    <description><![CDATA[
+    This plugin enabled syntax highlighting and syntax checking for mapper files.<br>
+    ]]></description>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="com.deprosun.MapperFileTypeFactory"/>
+        <lang.parserDefinition language="Mapper" implementationClass="com.deprosun.MapperParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Mapper" implementationClass="com.deprosun.MapperSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="com.deprosun.MapperColorSettingsPage"/>
+        <lang.formatter language="Mapper" implementationClass="com.deprosun.formatter.MapperFormattingModelBuilder"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>
